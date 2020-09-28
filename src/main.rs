@@ -17,13 +17,17 @@ fn main() {
         .get_matches();
 
 
+    // Identify if the hex dump flag was used
     if matches.is_present("hexdump") {
+        // Read in file to a vec<u8>
         let mut file = File::open(matches.value_of("hexdump").unwrap().to_string()).unwrap();
         let mut a: Vec<u8> = Vec::new();
         let len = file.read_to_end(&mut a).unwrap();
 
+        // Dump colorfully
         colorful_hexdump(&a);
 
+        // Print total length of file
         println!("File length: {} bytes", len);
     } else {
         println!("Unsupported flag");
@@ -32,39 +36,53 @@ fn main() {
 }
 
 fn colorful_hexdump(a: &Vec<u8>) {
-
+    // Iterate through all of the bytes of the file
     for (n,i) in a.into_iter().enumerate() {
+        // Every 16 bytes, print summary ascii bytes
         if (n % 16) == 0 {
+            // Make sure this is after the first 16 bytes
             if n > 0 {
+                // Print ascii bytes in hexdump -C -like style
                 print!("|");
                 for j in n-16..n {
                     if a[j].is_ascii_graphic() {
+                        // Print ascii chars
                         print!("{}", a[j] as char);
                     } else {
+                        // Print '.' for non-printable chars
                         print!(".");
                     }
                 }
                 print!("|");
             }
             println!();
+
+            // Print hex address for line
             print!("{:08x} ", n);
         }
 
+        // Add extra space between 8th and 9th hex values
         if (n % 8) == 0 {
             print!(" ");
         }
 
+        // Print hex byte
         print!("{:02x} ", i);
     }
 
+    // This is the cleanup for the last line of the hexdump
     if (a.len() % 16) != 0 {
+        // Figure out how many bytes are at the end
         let mut n = a.len() % 16;
 
+        // Add spaces to move cursor
         for _ in 0..(16-n)*3 {
             print!(" ");
         }
+
+        // Add extra space if fewer than 8 chars
         if n <= 8 {
-            n += 1;
+            print!(" ");
         }
 
         print!("|");
