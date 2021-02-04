@@ -1,3 +1,7 @@
 # hexy
 
-This is a simple hexdump like utility. I am planning on adding color output based on individual hex values. Eventually I want to add a color coded hex diff for quick file diff identification based on how much the values differ.
+This is a simple hexdump-like utility. It changes the color of the byte based on the ASCII value. This was mostly for fun but could also come in handy in some situations I guess maybe.
+
+Enjoy!
+
+-geno
