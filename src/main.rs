@@ -79,10 +79,11 @@ fn colorful_hexdump(a: &Vec<u8>) {
         printx(i);
     }
 
+    let mut n = 0;
     // This is the cleanup for the last line of the hexdump
     if (a.len() % 16) != 0 {
         // Figure out how many bytes are at the end
-        let n = a.len() % 16;
+        n = a.len() % 16;
 
         // Add spaces to move cursor
         for _ in 0..(16-n)*3 {
@@ -93,17 +94,20 @@ fn colorful_hexdump(a: &Vec<u8>) {
         if n <= 8 {
             print!(" ");
         }
-
-        printc(&('|' as u8));
-        for i in 0..n {
-            if a[a.len()-n+i].is_ascii_graphic() {
-                printc(&a[a.len()-n+i]);
-            } else {
-                printc(&('.' as u8));
-            }
-        }
-        printc(&('|' as u8));
     }
+
+    if (n == 0) {
+        n = 16;
+    }
+    printc(&('|' as u8));
+    for i in 0..n {
+        if a[a.len()-n+i].is_ascii_graphic() {
+            printc(&a[a.len()-n+i]);
+        } else {
+            printc(&('.' as u8));
+        }
+    }
+    printc(&('|' as u8));
 
     println!();
 }
