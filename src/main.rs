@@ -1,3 +1,4 @@
+use ansi_term::Color::RGB;
 use clap::{App, Arg};
 use std::fs::File;
 use std::io::prelude::*;
@@ -35,6 +36,14 @@ fn main() {
 
 }
 
+fn printc(a: &u8) {
+    print!("{}", RGB((*a << 1) & 0xf0, (*a << 3) & 0xf0, (*a << 5) & 0xf0).paint(format!("{}", *a as char)));
+}
+
+fn printx(a: &u8) {
+    print!("{}", RGB((*a << 1) & 0xf0, (*a << 3) & 0xf0, (*a << 5) & 0xf0).paint(format!("{:02x} ", a)));
+}
+
 fn colorful_hexdump(a: &Vec<u8>) {
     // Iterate through all of the bytes of the file
     for (n,i) in a.into_iter().enumerate() {
@@ -43,17 +52,17 @@ fn colorful_hexdump(a: &Vec<u8>) {
             // Make sure this is after the first 16 bytes
             if n > 0 {
                 // Print ascii bytes in hexdump -C -like style
-                print!("|");
+                printc(&('|' as u8));
                 for j in n-16..n {
                     if a[j].is_ascii_graphic() {
                         // Print ascii chars
-                        print!("{}", a[j] as char);
+                        printc(&a[j]);
                     } else {
                         // Print '.' for non-printable chars
-                        print!(".");
+                        printc(&('.' as u8));
                     }
                 }
-                print!("|");
+                printc(&('|' as u8));
             }
             println!();
 
@@ -67,13 +76,13 @@ fn colorful_hexdump(a: &Vec<u8>) {
         }
 
         // Print hex byte
-        print!("{:02x} ", i);
+        printx(i);
     }
 
     // This is the cleanup for the last line of the hexdump
     if (a.len() % 16) != 0 {
         // Figure out how many bytes are at the end
-        let mut n = a.len() % 16;
+        let n = a.len() % 16;
 
         // Add spaces to move cursor
         for _ in 0..(16-n)*3 {
@@ -85,15 +94,15 @@ fn colorful_hexdump(a: &Vec<u8>) {
             print!(" ");
         }
 
-        print!("|");
+        printc(&('|' as u8));
         for i in 0..n {
             if a[a.len()-n+i].is_ascii_graphic() {
-                print!("{}", a[a.len()-n+i] as char);
+                printc(&a[a.len()-n+i]);
             } else {
-                print!(".");
+                printc(&('.' as u8));
             }
         }
-        print!("|");
+        printc(&('|' as u8));
     }
 
     println!();
