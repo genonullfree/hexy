@@ -31,7 +31,7 @@ fn main() {
         // Print total length of file
         println!("File length: {} bytes", len);
     } else {
-        println!("Unsupported flag");
+        println!("Nothing to do. Add the `-f <file>` argument.");
     }
 
 }
@@ -96,7 +96,7 @@ fn colorful_hexdump(a: &Vec<u8>) {
         }
     }
 
-    if (n == 0) {
+    if n == 0 {
         n = 16;
     }
     printc(&('|' as u8));
