@@ -1,7 +1,7 @@
 use ansi_term::Color::RGB;
 use clap::{App, Arg};
 use std::fs::File;
-use std::io::{self, Read};
+use std::io;
 
 fn main() {
     let matches = App::new("hexy")
@@ -31,7 +31,7 @@ fn main() {
 
     } else {
         let standardin = io::stdin();
-        let mut file = standardin.lock();
+        let file = standardin.lock();
 
         // Read stdin
         let len = read_file(file);
