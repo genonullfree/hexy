@@ -21,19 +21,40 @@ fn main() {
     // Identify if the hex dump flag was used
     if matches.is_present("hexdump") {
         // Read in file to a vec<u8>
-        let mut file = File::open(matches.value_of("hexdump").unwrap().to_string()).unwrap();
-        let mut a: Vec<u8> = Vec::new();
-        let len = file.read_to_end(&mut a).unwrap();
+        let file = File::open(matches.value_of("hexdump").unwrap().to_string()).unwrap();
 
-        // Dump colorfully
-        colorful_hexdump(&a);
+        // Read file
+        let len = read_file(file);
 
-        // Print total length of file
+        // Print footer info
         println!("File length: {} bytes", len);
+
     } else {
+        // TODO: Read and dump from stdin
         println!("Nothing to do. Add the `-f <file>` argument.");
     }
 
+}
+
+fn read_file(mut input: File) -> usize {
+    let mut len: usize = 0;
+    loop {
+        // Read in up to 512 bytes at a time
+        let mut a: [u8; 512] = [0; 512];
+        let chunk = input.read(&mut a).unwrap();
+        // If read was empty we're done
+        if chunk == 0 {
+            break;
+        }
+
+        // Print this chunk hexily
+        colorful_hexdump(&a, &len, &chunk);
+        len += chunk;
+    }
+    println!();
+
+    // Return total length
+    len
 }
 
 fn printc(a: &u8) {
@@ -44,9 +65,14 @@ fn printx(a: &u8) {
     print!("{}", RGB((*a << 1) & 0xf0, (*a << 3) & 0xf0, (*a << 5) & 0xf0).paint(format!("{:02x} ", a)));
 }
 
-fn colorful_hexdump(a: &Vec<u8>) {
+fn colorful_hexdump(a: &[u8], length: &usize, piece: &usize) {
+    let mut len = *length;
+    let chunk = *piece;
     // Iterate through all of the bytes of the file
     for (n,i) in a.into_iter().enumerate() {
+        if n == chunk {
+            break;
+        }
         // Every 16 bytes, print summary ascii bytes
         if (n % 16) == 0 {
             // Make sure this is after the first 16 bytes
@@ -67,7 +93,8 @@ fn colorful_hexdump(a: &Vec<u8>) {
             println!();
 
             // Print hex address for line
-            print!("{:08x} ", n);
+            print!("{:08x} ", len);
+            len += 16;
         }
 
         // Add extra space between 8th and 9th hex values
@@ -81,9 +108,9 @@ fn colorful_hexdump(a: &Vec<u8>) {
 
     let mut n = 0;
     // This is the cleanup for the last line of the hexdump
-    if (a.len() % 16) != 0 {
+    if (chunk % 16) != 0 {
         // Figure out how many bytes are at the end
-        n = a.len() % 16;
+        n = chunk % 16;
 
         // Add spaces to move cursor
         for _ in 0..(16-n)*3 {
@@ -101,13 +128,11 @@ fn colorful_hexdump(a: &Vec<u8>) {
     }
     printc(&('|' as u8));
     for i in 0..n {
-        if a[a.len()-n+i].is_ascii_graphic() {
-            printc(&a[a.len()-n+i]);
+        if a[chunk-n+i].is_ascii_graphic() {
+            printc(&a[chunk-n+i]);
         } else {
             printc(&('.' as u8));
         }
     }
     printc(&('|' as u8));
-
-    println!();
 }
