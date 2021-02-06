@@ -1,7 +1,7 @@
 use ansi_term::Color::RGB;
 use clap::{App, Arg};
 use std::fs::File;
-use std::io::prelude::*;
+use std::io::{self, Read};
 
 fn main() {
     let matches = App::new("hexy")
@@ -30,18 +30,24 @@ fn main() {
         println!("File length: {} bytes", len);
 
     } else {
-        // TODO: Read and dump from stdin
-        println!("Nothing to do. Add the `-f <file>` argument.");
-    }
+        let standardin = io::stdin();
+        let mut file = standardin.lock();
 
+        // Read stdin
+        let len = read_file(file);
+
+        // Print footer info
+        println!("File length: {} bytes", len);
+    }
 }
 
-fn read_file(mut input: File) -> usize {
+fn read_file<T: std::io::Read>(mut input: T) -> usize {
     let mut len: usize = 0;
     loop {
         // Read in up to 512 bytes at a time
         let mut a: [u8; 512] = [0; 512];
         let chunk = input.read(&mut a).unwrap();
+
         // If read was empty we're done
         if chunk == 0 {
             break;
