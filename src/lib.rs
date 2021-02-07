@@ -22,14 +22,19 @@ pub fn hexyfile<T: std::io::Read>(mut input: T) -> usize {
     len
 }
 
-fn hexy_c(a: &u8) {
+pub fn hexy_c(a: &u8) {
+    let mut c = *a as char;
+    if !a.is_ascii_graphic() {
+        c = '.';
+    }
+
     print!(
         "{}",
-        RGB((*a << 1) & 0xf0, (*a << 3) & 0xf0, (*a << 5) & 0xf0).paint(format!("{}", *a as char))
+        RGB((*a << 1) & 0xf0, (*a << 3) & 0xf0, (*a << 5) & 0xf0).paint(format!("{}", c))
     );
 }
 
-fn hexy_x(a: &u8) {
+pub fn hexy_x(a: &u8) {
     print!(
         "{}",
         RGB((*a << 1) & 0xf0, (*a << 3) & 0xf0, (*a << 5) & 0xf0).paint(format!("{:02x}", a))
