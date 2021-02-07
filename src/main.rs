@@ -23,7 +23,7 @@ fn main() {
         let file = File::open(matches.value_of("hexdump").unwrap().to_string()).unwrap();
 
         // Read file
-        let len = read_file(file);
+        let len = hexyfile(file);
 
         // Print footer info
         println!("File length: {} bytes", len);
@@ -32,7 +32,7 @@ fn main() {
         let file = standardin.lock();
 
         // Read stdin
-        let len = read_file(file);
+        let len = hexyfile(file);
 
         // Print footer info
         println!("File length: {} bytes", len);
