@@ -22,17 +22,17 @@ pub fn hexyfile<T: std::io::Read>(mut input: T) -> usize {
     len
 }
 
-fn printc(a: &u8) {
+fn hexy_c(a: &u8) {
     print!(
         "{}",
         RGB((*a << 1) & 0xf0, (*a << 3) & 0xf0, (*a << 5) & 0xf0).paint(format!("{}", *a as char))
     );
 }
 
-fn printx(a: &u8) {
+fn hexy_x(a: &u8) {
     print!(
         "{}",
-        RGB((*a << 1) & 0xf0, (*a << 3) & 0xf0, (*a << 5) & 0xf0).paint(format!("{:02x} ", a))
+        RGB((*a << 1) & 0xf0, (*a << 3) & 0xf0, (*a << 5) & 0xf0).paint(format!("{:02x}", a))
     );
 }
 
@@ -49,17 +49,17 @@ pub fn hexydump(a: &[u8], length: &usize, piece: &usize) {
             // Make sure this is after the first 16 bytes
             if n > 0 {
                 // Print ascii bytes in hexdump -C -like style
-                printc(&('|' as u8));
+                hexy_c(&('|' as u8));
                 for j in n - 16..n {
                     if a[j].is_ascii_graphic() {
                         // Print ascii chars
-                        printc(&a[j]);
+                        hexy_c(&a[j]);
                     } else {
                         // Print '.' for non-printable chars
-                        printc(&('.' as u8));
+                        hexy_c(&('.' as u8));
                     }
                 }
-                printc(&('|' as u8));
+                hexy_c(&('|' as u8));
             }
             println!();
 
@@ -74,7 +74,8 @@ pub fn hexydump(a: &[u8], length: &usize, piece: &usize) {
         }
 
         // Print hex byte
-        printx(i);
+        hexy_x(i);
+        print!(" ");
     }
 
     let mut n = 0;
@@ -97,13 +98,13 @@ pub fn hexydump(a: &[u8], length: &usize, piece: &usize) {
     if n == 0 {
         n = 16;
     }
-    printc(&('|' as u8));
+    hexy_c(&('|' as u8));
     for i in 0..n {
         if a[chunk - n + i].is_ascii_graphic() {
-            printc(&a[chunk - n + i]);
+            hexy_c(&a[chunk - n + i]);
         } else {
-            printc(&('.' as u8));
+            hexy_c(&('.' as u8));
         }
     }
-    printc(&('|' as u8));
+    hexy_c(&('|' as u8));
 }
