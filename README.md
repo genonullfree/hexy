@@ -6,7 +6,7 @@ This is a simple hexdump-like utility. It changes the color of the byte based on
 
 ```
 [dependencies]
-hexy = "0.1.1"
+hexy = "0.1.2"
 ```
 
 ## API
