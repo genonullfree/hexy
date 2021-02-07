@@ -56,13 +56,8 @@ pub fn hexydump(a: &[u8], length: &usize, piece: &usize) {
                 // Print ascii bytes in hexdump -C -like style
                 hexy_c(&('|' as u8));
                 for j in n - 16..n {
-                    if a[j].is_ascii_graphic() {
-                        // Print ascii chars
-                        hexy_c(&a[j]);
-                    } else {
-                        // Print '.' for non-printable chars
-                        hexy_c(&('.' as u8));
-                    }
+                    // Print colorful ascii
+                    hexy_c(&a[j]);
                 }
                 hexy_c(&('|' as u8));
             }
