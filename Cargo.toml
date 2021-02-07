@@ -1,6 +1,6 @@
 [package]
 name = "hexy"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["geno nullfree <nullfree.geno@gmail.com>"]
 edition = "2018"
 description = "A rust library for printing hexy hex dumps with colors based on the byte values"
