@@ -30,14 +30,14 @@ pub fn hexy_c(a: &u8) {
 
     print!(
         "{}",
-        RGB((*a << 1) & 0xf0, (*a << 3) & 0xf0, (*a << 5) & 0xf0).paint(format!("{}", c))
+        RGB(((*a << 1) & 0xf0) | 0x0f, ((*a << 3) & 0xf0) | 0x0f, ((*a << 5) & 0xf0) | 0x0f).paint(format!("{}", c))
     );
 }
 
 pub fn hexy_x(a: &u8) {
     print!(
         "{}",
-        RGB((*a << 1) & 0xf0, (*a << 3) & 0xf0, (*a << 5) & 0xf0).paint(format!("{:02x}", a))
+        RGB(((*a << 1) & 0xf0) | 0x0f, ((*a << 3) & 0xf0) | 0x0f, ((*a << 5) & 0xf0) | 0x0f).paint(format!("{:02x}", a))
     );
 }
 
