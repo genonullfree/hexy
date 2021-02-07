@@ -3,9 +3,13 @@ name = "hexy"
 version = "0.1.0"
 authors = ["geno nullfree <nullfree.geno@gmail.com>"]
 edition = "2018"
+description = "A rust library for printing hexy hex dumps with colors based on the byte values"
+keywords = ["hex", "hexdump", "byte", "print", "color"]
+license = "GPL-3.0-only"
+readme = "README.md"
+repository = "https://github.com/genonullfree/hexy"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = "2.33.1"
 ansi_term = "0.12.1"

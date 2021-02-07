@@ -2,7 +2,7 @@
 
 This is a simple hexdump-like utility. It changes the color of the byte based on the ASCII value. This was mostly for fun but could also come in handy in some situations I guess maybe.
 
-## Usage
+## Usage as an executable
 ```
 USAGE:
     hexy [OPTIONS]
@@ -15,7 +15,7 @@ OPTIONS:
     -f, --hexdump <hexdump>    file to dump hexily
 ```
 
-## Examples
+## Executable examples
 
 Pass a file to hexy:
 ```
@@ -25,4 +25,11 @@ Pass a file to hexy:
 Pipe input to hexy:
 ```
 cat <filename> | ./hexy
+```
+
+## Usage as a library
+
+```
+[dependencies]
+hexy = "0.1.0"
 ```

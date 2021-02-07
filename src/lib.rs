@@ -1,47 +1,6 @@
 use ansi_term::Color::RGB;
-use clap::{App, Arg};
-use std::fs::File;
-use std::io;
 
-fn main() {
-    let matches = App::new("hexy")
-        .version("0.1.0")
-        .author("geno")
-        .about("colorful hex dump output")
-        .arg(
-            Arg::with_name("hexdump")
-                .short("f")
-                .long("hexdump")
-                .help("file to dump hexily")
-                .takes_value(true),
-        )
-        .get_matches();
-
-
-    // Identify if the hex dump flag was used
-    if matches.is_present("hexdump") {
-        // Read in file to a vec<u8>
-        let file = File::open(matches.value_of("hexdump").unwrap().to_string()).unwrap();
-
-        // Read file
-        let len = read_file(file);
-
-        // Print footer info
-        println!("File length: {} bytes", len);
-
-    } else {
-        let standardin = io::stdin();
-        let file = standardin.lock();
-
-        // Read stdin
-        let len = read_file(file);
-
-        // Print footer info
-        println!("File length: {} bytes", len);
-    }
-}
-
-fn read_file<T: std::io::Read>(mut input: T) -> usize {
+pub fn hexyfile<T: std::io::Read>(mut input: T) -> usize {
     let mut len: usize = 0;
     loop {
         // Read in up to 512 bytes at a time
@@ -54,7 +13,7 @@ fn read_file<T: std::io::Read>(mut input: T) -> usize {
         }
 
         // Print this chunk hexily
-        colorful_hexdump(&a, &len, &chunk);
+        hexydump(&a, &len, &chunk);
         len += chunk;
     }
     println!();
@@ -64,18 +23,24 @@ fn read_file<T: std::io::Read>(mut input: T) -> usize {
 }
 
 fn printc(a: &u8) {
-    print!("{}", RGB((*a << 1) & 0xf0, (*a << 3) & 0xf0, (*a << 5) & 0xf0).paint(format!("{}", *a as char)));
+    print!(
+        "{}",
+        RGB((*a << 1) & 0xf0, (*a << 3) & 0xf0, (*a << 5) & 0xf0).paint(format!("{}", *a as char))
+    );
 }
 
 fn printx(a: &u8) {
-    print!("{}", RGB((*a << 1) & 0xf0, (*a << 3) & 0xf0, (*a << 5) & 0xf0).paint(format!("{:02x} ", a)));
+    print!(
+        "{}",
+        RGB((*a << 1) & 0xf0, (*a << 3) & 0xf0, (*a << 5) & 0xf0).paint(format!("{:02x} ", a))
+    );
 }
 
-fn colorful_hexdump(a: &[u8], length: &usize, piece: &usize) {
+pub fn hexydump(a: &[u8], length: &usize, piece: &usize) {
     let mut len = *length;
     let chunk = *piece;
     // Iterate through all of the bytes of the file
-    for (n,i) in a.into_iter().enumerate() {
+    for (n, i) in a.into_iter().enumerate() {
         if n == chunk {
             break;
         }
@@ -85,7 +50,7 @@ fn colorful_hexdump(a: &[u8], length: &usize, piece: &usize) {
             if n > 0 {
                 // Print ascii bytes in hexdump -C -like style
                 printc(&('|' as u8));
-                for j in n-16..n {
+                for j in n - 16..n {
                     if a[j].is_ascii_graphic() {
                         // Print ascii chars
                         printc(&a[j]);
@@ -119,7 +84,7 @@ fn colorful_hexdump(a: &[u8], length: &usize, piece: &usize) {
         n = chunk % 16;
 
         // Add spaces to move cursor
-        for _ in 0..(16-n)*3 {
+        for _ in 0..(16 - n) * 3 {
             print!(" ");
         }
 
@@ -134,8 +99,8 @@ fn colorful_hexdump(a: &[u8], length: &usize, piece: &usize) {
     }
     printc(&('|' as u8));
     for i in 0..n {
-        if a[chunk-n+i].is_ascii_graphic() {
-            printc(&a[chunk-n+i]);
+        if a[chunk - n + i].is_ascii_graphic() {
+            printc(&a[chunk - n + i]);
         } else {
             printc(&('.' as u8));
         }
