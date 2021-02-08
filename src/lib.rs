@@ -23,10 +23,11 @@ pub fn hexyfile<T: std::io::Read>(mut input: T) -> usize {
 }
 
 pub fn hexy_c(a: &u8) {
-    let mut c = *a as char;
-    if !a.is_ascii_graphic() {
-        c = '.';
-    }
+    let c = if a.is_ascii_graphic() {
+        *a as char
+    } else {
+        '.'
+    };
 
     print!(
         "{}",
