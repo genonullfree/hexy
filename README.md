@@ -1,6 +1,7 @@
 # hexy
 
-This is a simple hexdump-like utility. It changes the color of the byte based on the ASCII value.
+This is a simple utility that can print a byte as an ASCII char or hex value. It will change the color of the byte based on the byte value.  
+This can be used with some builtin functions to provide a hexdump-like interface, or for byte-by-byte hex value or ASCII character printing.
 
 ## Usage as a library
 
@@ -23,8 +24,8 @@ pub fn hexyfile<T: std::io::Read>(mut input: T) -> usize
 pub fn hexydump(a: &[u8], length: &usize, piece: &usize)
 
 //! This prints a single u8 as a colorful char, if possible, else a '.'
-fn hexy_c(a: &u8)
+pub fn hexy_c(a: &u8)
 
 //! This prints a single u8 as a colorful hex byte {:02x}
-fn hexy_x(a: &u8)
+pub fn hexy_x(a: &u8)
 ```
