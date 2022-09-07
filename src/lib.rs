@@ -81,7 +81,7 @@ pub fn hexydump(a: &[u8], length: &usize, piece: &usize) {
         }
 
         // Print hex byte
-        hexy_x(i);
+        hexy_x(*i);
         print!(" ");
     }
 
