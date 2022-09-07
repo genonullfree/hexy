@@ -22,23 +22,29 @@ pub fn hexyfile<T: std::io::Read>(mut input: T) -> usize {
     len
 }
 
-pub fn hexy_c(a: &u8) {
-    let c = if a.is_ascii_graphic() {
-        *a as char
-    } else {
-        '.'
-    };
+pub fn hexy_c(a: u8) {
+    let c = if a.is_ascii_graphic() { a as char } else { '.' };
 
     print!(
         "{}",
-        RGB(((*a << 1) & 0xf0) | 0x0f, ((*a << 3) & 0xf0) | 0x0f, ((*a << 5) & 0xf0) | 0x0f).paint(format!("{}", c))
+        RGB(
+            ((a << 1) & 0xf0) | 0x0f,
+            ((a << 3) & 0xf0) | 0x0f,
+            ((a << 5) & 0xf0) | 0x0f
+        )
+        .paint(format!("{}", c))
     );
 }
 
-pub fn hexy_x(a: &u8) {
+pub fn hexy_x(a: u8) {
     print!(
         "{}",
-        RGB(((*a << 1) & 0xf0) | 0x0f, ((*a << 3) & 0xf0) | 0x0f, ((*a << 5) & 0xf0) | 0x0f).paint(format!("{:02x}", a))
+        RGB(
+            ((a << 1) & 0xf0) | 0x0f,
+            ((a << 3) & 0xf0) | 0x0f,
+            ((a << 5) & 0xf0) | 0x0f
+        )
+        .paint(format!("{:02x}", a))
     );
 }
 
@@ -55,12 +61,12 @@ pub fn hexydump(a: &[u8], length: &usize, piece: &usize) {
             // Make sure this is after the first 16 bytes
             if n > 0 {
                 // Print ascii bytes in hexdump -C -like style
-                hexy_c(&b'|');
+                hexy_c(b'|');
                 for item in a.iter().take(n).skip(n - 16) {
                     // Print colorful ascii
-                    hexy_c(item);
+                    hexy_c(*item);
                 }
-                hexy_c(&b'|');
+                hexy_c(b'|');
             }
             println!();
 
@@ -99,13 +105,13 @@ pub fn hexydump(a: &[u8], length: &usize, piece: &usize) {
     if n == 0 {
         n = 16;
     }
-    hexy_c(&b'|');
+    hexy_c(b'|');
     for i in 0..n {
         if a[chunk - n + i].is_ascii_graphic() {
-            hexy_c(&a[chunk - n + i]);
+            hexy_c(a[chunk - n + i]);
         } else {
-            hexy_c(&b'.');
+            hexy_c(b'.');
         }
     }
-    hexy_c(&b'|');
+    hexy_c(b'|');
 }
