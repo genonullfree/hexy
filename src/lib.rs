@@ -46,7 +46,7 @@ pub fn hexydump(a: &[u8], length: &usize, piece: &usize) {
     let mut len = *length;
     let chunk = *piece;
     // Iterate through all of the bytes of the file
-    for (n, i) in a.into_iter().enumerate() {
+    for (n, i) in a.iter().enumerate() {
         if n == chunk {
             break;
         }
@@ -55,12 +55,12 @@ pub fn hexydump(a: &[u8], length: &usize, piece: &usize) {
             // Make sure this is after the first 16 bytes
             if n > 0 {
                 // Print ascii bytes in hexdump -C -like style
-                hexy_c(&('|' as u8));
-                for j in n - 16..n {
+                hexy_c(&b'|');
+                for item in a.iter().take(n).skip(n - 16) {
                     // Print colorful ascii
-                    hexy_c(&a[j]);
+                    hexy_c(item);
                 }
-                hexy_c(&('|' as u8));
+                hexy_c(&b'|');
             }
             println!();
 
@@ -99,13 +99,13 @@ pub fn hexydump(a: &[u8], length: &usize, piece: &usize) {
     if n == 0 {
         n = 16;
     }
-    hexy_c(&('|' as u8));
+    hexy_c(&b'|');
     for i in 0..n {
         if a[chunk - n + i].is_ascii_graphic() {
             hexy_c(&a[chunk - n + i]);
         } else {
-            hexy_c(&('.' as u8));
+            hexy_c(&b'.');
         }
     }
-    hexy_c(&('|' as u8));
+    hexy_c(&b'|');
 }
